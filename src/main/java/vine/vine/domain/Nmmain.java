@@ -1,0 +1,92 @@
+package vine.vine.domain;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
+
+
+@Entity
+@Data
+@Table(name = "nmmain")
+public class Nmmain {
+    @Id
+    @Column(name = "name_id")
+    private Integer nameId;
+
+    @Column(name = "state_id")
+    private String stateId;
+
+    @Column(name = "firstname")
+    private String firstname;
+
+    @Column(name = "middlename")
+    private String middlename;
+
+    @Column(name = "lastname")
+    private String lastname;
+
+    @Column(name = "dob")
+    private String dob;
+
+    @Column(name = "race")
+    private String race;
+
+    @Column(name = "sex")
+    private String sex;
+
+    @Column(name = "height")
+    private String height;
+
+    @Column(name = "weight")
+    private String weight;
+
+    @Column(name = "ssn")
+    private String ssn;
+
+    @Column(name = "street")
+    private String street;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "state")
+    private String state;
+
+    @Column(name = "zip")
+    private String zip;
+
+    @Column(name = "birthplace")
+    private String birthplace;
+
+    @Column(name = "dr_lic")
+    private String drLic;
+
+    @Column(name = "dl_state")
+    private String dlState;
+
+    @Column(name = "marital")
+    private String marital;
+
+    @Column(name = "occupation")
+    private String occupation;
+
+    @Column(name = "eye")
+    private String eye;
+
+    @Column(name = "hair")
+    private String hair;
+
+    @Column(name = "employer")
+    private String employer;
+
+    @Column(name = "hphone")
+    private String hphone;
+
+    @Column(name = "wphone")
+    private String wphone;
+
+    @Column(name = "mphone")
+    private String mphone;
+}
