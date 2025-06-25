@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vine.vine.domain.dto.response.ChargesResponse;
@@ -23,4 +24,17 @@ public class ChargesController {
         Page<ChargesResponse> responses = chargesService.getAllCharges(pageable);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
+
+    @GetMapping("/generate/{bookId}")
+    public ResponseEntity<String> generateByBookingId(@PathVariable Integer bookId) {
+        try {
+            String content = chargesService.getPrisonerChargesByBookingId(bookId);
+            return ResponseEntity.ok("File generated for booking ID " + bookId + " with " + content.split("\n").length + " lines.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
+
+
+
 }

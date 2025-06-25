@@ -11,7 +11,7 @@ public class JmmainResponse {
     private Integer bookId;
     private String agency;
     private String addtime;
-    private String nameId;
+    private Integer nameId;
 
 
     public static JmmainResponse from(Jmmain jmmain){

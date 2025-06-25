@@ -16,5 +16,5 @@ public class Jmmain {
     private Integer bookId;
     private String agency;
     private String addtime;
-    private String nameId;
+    private Integer nameId;
 }

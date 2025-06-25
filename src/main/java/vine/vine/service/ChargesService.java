@@ -6,4 +6,6 @@ import vine.vine.domain.dto.response.ChargesResponse;
 
 public interface ChargesService {
     Page<ChargesResponse> getAllCharges(Pageable pageable);
+    String getPrisonerCharges();
+    String getPrisonerChargesByBookingId(Integer bookId);
 }

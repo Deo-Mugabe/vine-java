@@ -7,7 +7,7 @@ import vine.vine.domain.Charges;
 @Data
 public class ChargesResponse {
     private Integer archrgid;
-    private Integer book_id;
+    private Integer bookId;
     private String arr_chrg;
     private String fel_misd;
     private String chrg_cnt;
@@ -20,7 +20,7 @@ public class ChargesResponse {
     public static ChargesResponse from(Charges charges) {
         ChargesResponse response = new ChargesResponse();
         response.setArchrgid(charges.getArchrgid());
-        response.setBook_id(charges.getBook_id());
+        response.setBookId(charges.getBookId());
         response.setArr_chrg(charges.getArr_chrg());
         response.setFel_misd(charges.getFel_misd());
         response.setChrg_cnt(charges.getChrg_cnt());
