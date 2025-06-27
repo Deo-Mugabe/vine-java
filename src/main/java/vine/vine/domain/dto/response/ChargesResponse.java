@@ -14,7 +14,7 @@ public class ChargesResponse {
     private String chrg_seq;
     private String bondamt;
     private String bondtype;
-    private String armainid;
+    private Integer armainid;
     private String chrgdesc;
 
     public static ChargesResponse from(Charges charges) {

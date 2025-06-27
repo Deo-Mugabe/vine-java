@@ -35,6 +35,16 @@ public class ChargesController {
         }
     }
 
+    @GetMapping("/generate")
+    public ResponseEntity<String> getPrisonerCharges() {
+        try {
+            String content = chargesService.getPrisonerCharges();
+            return ResponseEntity.ok("File generated " + content.split("\n").length + " lines.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
+
 
 
 }

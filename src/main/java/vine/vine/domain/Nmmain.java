@@ -60,10 +60,10 @@ public class Nmmain {
     @Column(name = "birthplace")
     private String birthplace;
 
-    @Column(name = "dr_lic")
+    @Column(name = "drlic")
     private String drLic;
 
-    @Column(name = "dl_state")
+    @Column(name = "dlstate")
     private String dlState;
 
     @Column(name = "marital")

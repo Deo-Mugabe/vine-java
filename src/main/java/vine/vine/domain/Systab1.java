@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Entity
 @Data
-@Table(name="systab1")
+@Table(name="systab")
 @RequiredArgsConstructor
 public class Systab1 {
     @Id

@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Data
 @RequiredArgsConstructor
-@Table(name = "archg3")
+@Table(name = "archrg")
 public class Charges {
 
     @Id
@@ -39,7 +39,7 @@ public class Charges {
     private String bondtype;
 
     @Column(name = "armainid")
-    private String armainid;
+    private Integer armainid;
 
     @Column(name = "chrgdesc")
     private String chrgdesc;

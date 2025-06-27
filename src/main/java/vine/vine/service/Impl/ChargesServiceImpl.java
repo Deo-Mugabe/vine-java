@@ -19,7 +19,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +51,10 @@ public class ChargesServiceImpl implements ChargesService {
         StringBuilder sb = new StringBuilder();
 
         try {
-            List<Jmmain> allBookings = jmmainRepository.findAll();
+            List<Jmmain> allBookings = jmmainRepository.findAll()
+                    .stream()
+                    .filter(booking -> booking.getBookId() != null && booking.getBookId() > 400401)
+                    .toList();
 
             for (Jmmain booking : allBookings) {
                 Integer nameId = booking.getNameId();
@@ -56,7 +63,16 @@ public class ChargesServiceImpl implements ChargesService {
                 Nmmain person = nmmainRepository.findById(nameId).orElse(null);
                 List<Charges> charges = chargesRepository.findByBookId(bookId);
 
+                // Get the first (lowest) armainid for this booking
+                Optional<Integer> firstArmainid = charges.stream()
+                        .map(Charges::getArmainid)
+                        .filter(Objects::nonNull)
+                        .min(Comparator.naturalOrder());
+
+                if (firstArmainid.isEmpty()) continue;
+
                 for (Charges charge : charges) {
+                    if (!firstArmainid.get().equals(charge.getArmainid())) continue;
                     sb.append(padRight(person != null ? person.getStateId() : "", 25));
                     sb.append(padRight(person != null ? String.valueOf(person.getNameId()) : "", 25));
                     sb.append(padRight(String.valueOf(charge.getBookId()), 25));
@@ -107,7 +123,17 @@ public class ChargesServiceImpl implements ChargesService {
             Nmmain person = nmmainRepository.findById(nameId).orElse(null);
             List<Charges> charges = chargesRepository.findByBookId(bookId);
 
+             // Get the first (lowest) armainid for this booking
+            Optional<Integer> firstArmainid = charges.stream()
+                    .map(Charges::getArmainid)
+                    .filter(Objects::nonNull)
+                    .min(Comparator.naturalOrder());
+
+            if (firstArmainid.isEmpty()) return "";
+
             for (Charges charge : charges) {
+                if (!firstArmainid.get().equals(charge.getArmainid())) continue;
+
                 sb.append(padRight(person != null ? person.getStateId() : "", 25));
                 sb.append(padRight(person != null ? String.valueOf(person.getNameId()) : "", 25));
                 sb.append(padRight(String.valueOf(charge.getBookId()), 25));
