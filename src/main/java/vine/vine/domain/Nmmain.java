@@ -6,6 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 
 @Entity
 @Data
@@ -28,7 +30,7 @@ public class Nmmain {
     private String lastname;
 
     @Column(name = "dob")
-    private String dob;
+    private LocalDate dob;
 
     @Column(name = "race")
     private String race;

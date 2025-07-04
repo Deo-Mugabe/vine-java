@@ -6,6 +6,8 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @RequiredArgsConstructor
@@ -16,10 +18,10 @@ public class Jrelease {
     private Integer jreleaseId;
 
     @Column(name = "book_id")
-    private Integer bookId;
+    private Long bookId;
 
     @Column(name = "releasetime")
-    private String releasetime;
+    private LocalDateTime releasetime;
 
     @Column(name = "relsreason")
     private String relsreason;

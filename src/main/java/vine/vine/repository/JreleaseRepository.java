@@ -8,5 +8,5 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface JreleaseRepository extends JpaRepository<Jrelease, Integer> {
+public interface JreleaseRepository extends JpaRepository<Jrelease, Long> {
 }

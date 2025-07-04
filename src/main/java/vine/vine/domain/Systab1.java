@@ -23,7 +23,7 @@ public class Systab1 {
     private String descriptn;
 
     @Column(name = "code_key")
-    private String code_key;
+    private String codeKey;
 
     @Column(name = "sys_msg")
     private String sys_msg;

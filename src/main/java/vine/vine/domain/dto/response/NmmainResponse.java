@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import lombok.Data;
 import vine.vine.domain.Nmmain;
 
+import java.time.LocalDate;
+
 
 @Data
 public class NmmainResponse {
@@ -13,7 +15,7 @@ public class NmmainResponse {
     private String firstname;
     private String middlename;
     private String lastname;
-    private String dob;
+    private LocalDate dob;
     private String race;
     private String sex;
     private String height;

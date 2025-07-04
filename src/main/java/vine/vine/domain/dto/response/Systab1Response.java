@@ -9,14 +9,14 @@ public class Systab1Response {
     private Integer systab1id;
     private String codeAgcy;
     private String descriptn;
-    private String code_key;
+    private String codeKey;
     private String sys_msg;
 
     public static Systab1Response from(Systab1 systab1){
         Systab1Response response = new Systab1Response();
         response.systab1id = systab1.getSystab1id();
         response.codeAgcy = systab1.getCodeAgcy();
-        response.code_key = systab1.getCode_key();
+        response.codeKey = systab1.getCodeKey();
         response.descriptn = systab1.getDescriptn();
         response.sys_msg = systab1.getSys_msg();
 
