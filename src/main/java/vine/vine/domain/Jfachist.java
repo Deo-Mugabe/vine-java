@@ -6,16 +6,19 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @RequiredArgsConstructor
 public class Jfachist {
+
     @Id
-    @Column(name = "jfachistid")
-    private Integer jfachistId;
+    @Column(name = "jfachistid", nullable = false)
+    private Long jfachistId;  // bigint -> Long
 
     @Column(name = "book_id")
-    private Integer bookId;
+    private Long bookId;      // bigint -> Long
 
     @Column(name = "facility")
     private String facility;
@@ -28,4 +31,9 @@ public class Jfachist {
 
     @Column(name = "bed")
     private String bed;
+
+    @Column(name = "eventdate")
+    private LocalDateTime eventDate;  // timestamp -> LocalDateTime
+
+    // Getters and setters omitted for brevity
 }

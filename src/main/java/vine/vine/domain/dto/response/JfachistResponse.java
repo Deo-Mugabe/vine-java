@@ -4,15 +4,18 @@ import jakarta.persistence.Column;
 import lombok.Data;
 import vine.vine.domain.Jfachist;
 
+import java.time.LocalDateTime;
+
 @Data
 public class JfachistResponse {
 
-    private Integer jfachistId;
-    private Integer bookId;
+    private Long jfachistId;
+    private Long bookId;
     private String facility;
     private String section;
     private String unit;
     private String bed;
+    private LocalDateTime eventDate;
 
     public static JfachistResponse from(Jfachist jfachist) {
         JfachistResponse response = new JfachistResponse();
@@ -22,6 +25,7 @@ public class JfachistResponse {
         response.section = jfachist.getSection();
         response.unit = jfachist.getUnit();
         response.bed = jfachist.getBed();
+        response.eventDate = jfachist.getEventDate();
         return response;
     }
 }

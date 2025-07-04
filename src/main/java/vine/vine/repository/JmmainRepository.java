@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import vine.vine.domain.Jmmain;
 
 @Repository
-public interface JmmainRepository extends JpaRepository<Jmmain, Integer> {
+public interface JmmainRepository extends JpaRepository<Jmmain, Long> {
 }

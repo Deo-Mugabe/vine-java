@@ -26,7 +26,7 @@ public class ChargesController {
     }
 
     @GetMapping("/generate/{bookId}")
-    public ResponseEntity<String> generateByBookingId(@PathVariable Integer bookId) {
+    public ResponseEntity<String> generateByBookingId(@PathVariable Long bookId) {
         try {
             String content = chargesService.getPrisonerChargesByBookingId(bookId);
             return ResponseEntity.ok("File generated for booking ID " + bookId + " with " + content.split("\n").length + " lines.");

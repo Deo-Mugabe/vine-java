@@ -7,7 +7,7 @@ import vine.vine.domain.Charges;
 @Data
 public class ChargesResponse {
     private Integer archrgid;
-    private Integer bookId;
+    private Long bookId;
     private String arr_chrg;
     private String fel_misd;
     private String chrg_cnt;

@@ -18,7 +18,7 @@ public class Charges {
     private Integer archrgid;
 
     @Column(name = "book_id")
-    private Integer bookId;
+    private Long bookId;
 
     @Column(name = "arr_chrg")
     private String arr_chrg;

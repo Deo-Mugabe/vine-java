@@ -19,6 +19,7 @@ public class NmmainResponse {
     private String height;
     private String weight;
     private String ssn;
+    private String streetNbr;
     private String street;
     private String city;
     private String state;
@@ -63,6 +64,7 @@ public class NmmainResponse {
         response.setHphone(nmmain.getHphone());
         response.setWphone(nmmain.getWphone());
         response.setMphone(nmmain.getMphone());
+        response.setStreetNbr(nmmain.getStreetNbr());
         return response;
     }
 }

@@ -57,8 +57,8 @@ public class ChargesServiceImpl implements ChargesService {
                     .toList();
 
             for (Jmmain booking : allBookings) {
-                Integer nameId = booking.getNameId();
-                Integer bookId = booking.getBookId();
+                Long nameId = booking.getNameId();
+                Long bookId = booking.getBookId();
 
                 Nmmain person = nmmainRepository.findById(nameId).orElse(null);
                 List<Charges> charges = chargesRepository.findByBookId(bookId);
@@ -109,7 +109,7 @@ public class ChargesServiceImpl implements ChargesService {
         }
     }
 
-    public String getPrisonerChargesByBookingId(Integer bookId) {
+    public String getPrisonerChargesByBookingId(Long bookId) {
         StringBuilder sb = new StringBuilder();
 
         try {
@@ -119,7 +119,7 @@ public class ChargesServiceImpl implements ChargesService {
                 return "";
             }
 
-            Integer nameId = booking.getNameId();
+            Long nameId = booking.getNameId();
             Nmmain person = nmmainRepository.findById(nameId).orElse(null);
             List<Charges> charges = chargesRepository.findByBookId(bookId);
 

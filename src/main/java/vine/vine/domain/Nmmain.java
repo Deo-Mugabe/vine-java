@@ -45,6 +45,9 @@ public class Nmmain {
     @Column(name = "ssn")
     private String ssn;
 
+    @Column(name = "streetnbr")
+    private String streetNbr;
+
     @Column(name = "street")
     private String street;
 
@@ -60,10 +63,10 @@ public class Nmmain {
     @Column(name = "birthplace")
     private String birthplace;
 
-    @Column(name = "drlic")
+    @Column(name = "dr_lic")
     private String drLic;
 
-    @Column(name = "dlstate")
+    @Column(name = "dl_state")
     private String dlState;
 
     @Column(name = "marital")

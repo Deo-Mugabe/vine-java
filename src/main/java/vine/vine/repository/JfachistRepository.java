@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import vine.vine.domain.Jfachist;
 
 @Repository
-public interface JfachistRepository extends JpaRepository<Jfachist, Integer> {
+public interface JfachistRepository extends JpaRepository<Jfachist, Long> {
 }

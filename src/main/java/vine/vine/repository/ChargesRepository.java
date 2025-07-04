@@ -7,6 +7,6 @@ import vine.vine.domain.Charges;
 import java.util.List;
 
 @Repository
-public interface ChargesRepository extends JpaRepository<Charges, Integer> {
-    List<Charges> findByBookId(Integer bookId);
+public interface ChargesRepository extends JpaRepository<Charges, Long> {
+    List<Charges> findByBookId(Long bookId);
 }
