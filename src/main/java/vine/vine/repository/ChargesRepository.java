@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface ChargesRepository extends JpaRepository<Charges, Long> {
     List<Charges> findByBookId(Long bookId);
+
 }

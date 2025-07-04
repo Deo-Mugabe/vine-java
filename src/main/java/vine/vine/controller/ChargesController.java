@@ -25,20 +25,20 @@ public class ChargesController {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
-    @GetMapping("/generate/{bookId}")
-    public ResponseEntity<String> generateByBookingId(@PathVariable Long bookId) {
-        try {
-            String content = chargesService.getPrisonerChargesByBookingId(bookId);
-            return ResponseEntity.ok("File generated for booking ID " + bookId + " with " + content.split("\n").length + " lines.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
-        }
-    }
+//    @GetMapping("/generate/{bookId}")
+//    public ResponseEntity<String> generateByBookingId(@PathVariable Long bookId) {
+//        try {
+//            String content = chargesService.getPrisonerChargesByBookingId(bookId);
+//            return ResponseEntity.ok("File generated for booking ID " + bookId + " with " + content.split("\n").length + " lines.");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+//        }
+//    }
 
     @GetMapping("/generate")
-    public ResponseEntity<String> getPrisonerCharges() {
+    public ResponseEntity<String> processBookings() {
         try {
-            String content = chargesService.getPrisonerCharges();
+            String content = chargesService.processBookings();
             return ResponseEntity.ok("File generated " + content.split("\n").length + " lines.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
