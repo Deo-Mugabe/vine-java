@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Data
 public class NmmainResponse {
 
-    private Integer nameId;
+    private Long nameId;
     private String stateId;
     private String firstname;
     private String middlename;

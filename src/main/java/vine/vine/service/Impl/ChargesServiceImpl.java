@@ -34,6 +34,7 @@ public class ChargesServiceImpl implements ChargesService {
     private final JreleaseRepository releaseRepository;
     private final JfachistRepository jfachistRepository;
     private final Systab1Repository systab1Repository;
+    private final ArmainRepository armainRepository;
 
     private static final Logger log = LoggerFactory.getLogger(ChargesServiceImpl.class);
     private final JreleaseRepository jreleaseRepository;
@@ -75,6 +76,18 @@ public class ChargesServiceImpl implements ChargesService {
         try{
             Optional<Nmmain> personOpt = nmmainRepository.findById(nameId);
             Nmmain person = personOpt.orElse(null);
+            if (person == null) {
+                log.info("The name id was not found in the nmmain data table. Name ID = " + nameId);
+                return "";
+            }
+
+            Optional<Armain> arrestOpt = armainRepository.findFirstByBookIdOrderByArmainidAsc(bookId);
+            Armain arrest = arrestOpt.orElse(null);
+
+            if (arrest == null) {
+                log.info("An arrest record was not found in the armain data table. Booking id = " + bookId);
+                return "";
+            }
 
             Optional<Jmmain> jmmainOpt = jmmainRepository.findById(bookId);
             Jmmain jmmain = jmmainOpt.orElse(null);
@@ -193,7 +206,18 @@ public class ChargesServiceImpl implements ChargesService {
         try {
             Optional<Nmmain> personOpt = nmmainRepository.findById(nameId);
             Nmmain person = personOpt.orElse(null);
+            if (person == null) {
+                log.info("The name id was not found in the nmmain data table. Name ID = " + nameId);
+                return "";
+            }
 
+            Optional<Armain> arrestOpt = armainRepository.findFirstByBookIdOrderByArmainidAsc(bookId);
+            Armain arrest = arrestOpt.orElse(null);
+
+            if (arrest == null) {
+                log.info("An arrest record was not found in the armain data table. Booking id = " + bookId);
+                return "";
+            }
             List<Charges> charges = chargesRepository.findByBookId(bookId);
 
             Optional<Integer> firstArmainid = charges.stream()

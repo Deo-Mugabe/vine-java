@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class Nmmain {
     @Id
     @Column(name = "name_id")
-    private Integer nameId;
+    private Long nameId;
 
     @Column(name = "state_id")
     private String stateId;
