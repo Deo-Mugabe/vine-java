@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Entity
 @Data
-@Table(name="systab")
+@Table(name="systab1")
 @RequiredArgsConstructor
 public class Systab1 {
     @Id
@@ -19,8 +19,6 @@ public class Systab1 {
     @Column(name = "codeAgcy")
     private String codeAgcy;
 
-    @Column(name = "descriptn")
-    private String descriptn;
 
     @Column(name = "code_key")
     private String codeKey;

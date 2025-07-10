@@ -1,6 +1,5 @@
 package vine.vine.domain.dto.response;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 import vine.vine.domain.Systab1;
 
@@ -8,7 +7,6 @@ import vine.vine.domain.Systab1;
 public class Systab1Response {
     private Integer systab1id;
     private String codeAgcy;
-    private String descriptn;
     private String codeKey;
     private String sys_msg;
 
@@ -17,7 +15,6 @@ public class Systab1Response {
         response.systab1id = systab1.getSystab1id();
         response.codeAgcy = systab1.getCodeAgcy();
         response.codeKey = systab1.getCodeKey();
-        response.descriptn = systab1.getDescriptn();
         response.sys_msg = systab1.getSys_msg();
 
         return response;

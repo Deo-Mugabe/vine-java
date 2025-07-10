@@ -15,7 +15,7 @@ public class Charges {
 
     @Id
     @Column(name = "archrgid")
-    private Integer archrgid;
+    private Long archrgid;
 
     @Column(name = "book_id")
     private Long bookId;
@@ -39,7 +39,7 @@ public class Charges {
     private String bondtype;
 
     @Column(name = "armainid")
-    private Integer armainid;
+    private Long armainid;
 
     @Column(name = "chrgdesc")
     private String chrgdesc;

@@ -1,12 +1,11 @@
 package vine.vine.domain.dto.response;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 import vine.vine.domain.Charges;
 
 @Data
 public class ChargesResponse {
-    private Integer archrgid;
+    private Long archrgid;
     private Long bookId;
     private String arr_chrg;
     private String fel_misd;
@@ -14,7 +13,7 @@ public class ChargesResponse {
     private String chrg_seq;
     private String bondamt;
     private String bondtype;
-    private Integer armainid;
+    private Long armainid;
     private String chrgdesc;
 
     public static ChargesResponse from(Charges charges) {

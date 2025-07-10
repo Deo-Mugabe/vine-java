@@ -1,27 +1,38 @@
 package vine.vine.service.Impl;
 
-import lombok.RequiredArgsConstructor;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import vine.vine.domain.*;
-import vine.vine.domain.dto.response.BookingNamePair;
-import vine.vine.domain.dto.response.ChargesResponse;
-import vine.vine.repository.*;
-import vine.vine.service.ChargesService;
-import org.slf4j.Logger;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
+import vine.vine.domain.Armain;
+import vine.vine.domain.Charges;
+import vine.vine.domain.Jfachist;
+import vine.vine.domain.Jmmain;
+import vine.vine.domain.Jrelease;
+import vine.vine.domain.Nmmain;
+import vine.vine.domain.Systab1;
+import vine.vine.domain.dto.response.BookingNamePair;
+import vine.vine.domain.dto.response.ChargesResponse;
+import vine.vine.repository.ArmainRepository;
+import vine.vine.repository.ChargesRepository;
+import vine.vine.repository.JfachistRepository;
+import vine.vine.repository.JmmainRepository;
+import vine.vine.repository.JreleaseRepository;
+import vine.vine.repository.NmmainRepository;
+import vine.vine.repository.Systab1Repository;
+import vine.vine.service.ChargesService;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +42,6 @@ public class ChargesServiceImpl implements ChargesService {
     private final JmmainRepository jmmainRepository;
     private final NmmainRepository nmmainRepository;
     private final BookingFetcher bookingFetcher;
-    private final JreleaseRepository releaseRepository;
     private final JfachistRepository jfachistRepository;
     private final Systab1Repository systab1Repository;
     private final ArmainRepository armainRepository;
@@ -51,6 +61,7 @@ public class ChargesServiceImpl implements ChargesService {
         return String.format("%1$-" + width + "s", value);
     }
 
+     @Override
     public String processBookings() {
         LocalDateTime lastRunTime = LocalDateTime.now().minusDays(30);
         List<BookingNamePair> bookingPairs = bookingFetcher.fetchBookingAndNameIds(lastRunTime);
@@ -94,9 +105,6 @@ public class ChargesServiceImpl implements ChargesService {
 
             Optional<Jfachist> jfachistOpt = jfachistRepository.findFirstByBookIdOrderByEventDateDesc(bookId);
             Jfachist jfachist = jfachistOpt.orElse(null);
-
-            Optional<Charges> chargeOpt = chargesRepository.findFirstByBookIdOrderByArmainidAsc(bookId);
-            Charges charge = chargeOpt.orElse(null);
 
             Optional<Jrelease> jreleaseOpt = jreleaseRepository.findById(bookId);
             Jrelease jrelease = jreleaseOpt.orElse(null);
@@ -157,7 +165,7 @@ public class ChargesServiceImpl implements ChargesService {
             }
 
 // Armainid from first charge
-            sb.append(padRight(charge != null ? String.valueOf(charge.getArmainid()) : "", 14));
+            sb.append(padRight(String.valueOf(arrest.getArmainid()), 14));
 
 // Address
             String address = "";
@@ -220,19 +228,12 @@ public class ChargesServiceImpl implements ChargesService {
             }
             List<Charges> charges = chargesRepository.findByBookId(bookId);
 
-            Optional<Integer> firstArmainid = charges.stream()
-                    .map(Charges::getArmainid)
-                    .filter(Objects::nonNull)
-                    .min(Comparator.naturalOrder());
-
-            if (firstArmainid.isEmpty()) {
-                return "";
-            }
+            Long ChargeArmainId = arrest.getArmainid();
 
             for (Charges charge : charges) {
-                if (!firstArmainid.get().equals(charge.getArmainid())) continue;
-                    sb.append(padRight(person != null ? person.getStateId() : "", 25));
-                    sb.append(padRight(person != null ? String.valueOf(person.getNameId()) : "", 25));
+                if (!ChargeArmainId.equals(charge.getArmainid())) continue;
+                    sb.append(padRight(person.getStateId() != null ? person.getStateId() : "", 25));
+                    sb.append(padRight(person.getNameId() != null ? String.valueOf(person.getNameId()) : "", 25));
                     sb.append(padRight(String.valueOf(charge.getBookId()), 25));
                     sb.append(padRight(charge.getArr_chrg(), 25)); // null-safe if String
                     sb.append(padRight(charge.getFel_misd(), 10));
