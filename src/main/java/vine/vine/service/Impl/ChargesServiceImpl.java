@@ -117,7 +117,7 @@ public class ChargesServiceImpl implements ChargesService {
             sb.append(padRight(person.getStateId() != null ? person.getStateId() : "", 25));
             sb.append(padRight(String.valueOf(person.getNameId()), 25));
             sb.append(padRight(String.valueOf(jmmain.getBookId()), 25));
-            sb.append(padRight(String.valueOf(arrest.getCaseId()), 25));
+            sb.append(padRight(safeString(arrest.getCaseId()), 25));
             sb.append(padRight(person.getFirstname() != null ? person.getFirstname() : "", 20));
             sb.append(padRight(person.getMiddlename() != null ? person.getMiddlename() : "", 20));
             sb.append(padRight(person.getLastname() != null ? person.getLastname() : "", 20));
@@ -136,7 +136,13 @@ public class ChargesServiceImpl implements ChargesService {
 
 // Systab1 sys_msg (AGCY message)
             sb.append(padRight(systab1 != null && systab1.getSys_msg() != null ? systab1.getSys_msg() : "", 12));
-
+           if (arrest.getDateArrest()!= null) {
+                sb.append(arrest.getDateArrest().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+                sb.append("        ");
+            } else {
+                sb.append("        "); // yyyyMMddHHmm = 12 characters
+            }
+            sb.append(padRight(String.valueOf(jmmain.getFaciId()), 12));
 // Booking date
             if (jmmain.getBookDate() != null) {
                 sb.append(jmmain.getBookDate().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm")));
@@ -266,5 +272,9 @@ public class ChargesServiceImpl implements ChargesService {
             throw new RuntimeException("File write failed", e);
         }
     }
+
+    private String safeString(Object value) {
+    return value != null ? value.toString() : "";
+}
 
 }
