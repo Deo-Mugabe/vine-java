@@ -48,6 +48,7 @@ public class ChargesServiceImpl implements ChargesService {
 
     private static final Logger log = LoggerFactory.getLogger(ChargesServiceImpl.class);
     private final JreleaseRepository jreleaseRepository;
+    private final SysConfigService sysConfigService;
 
 
     @Override
@@ -62,8 +63,7 @@ public class ChargesServiceImpl implements ChargesService {
     }
 
      @Override
-    public String processBookings() {
-        LocalDateTime lastRunTime = LocalDateTime.now().minusDays(30);
+    public String processBookings(LocalDateTime lastRunTime) {
         List<BookingNamePair> bookingPairs = bookingFetcher.fetchBookingAndNameIds(lastRunTime);
 
         StringBuilder sb = new StringBuilder();
@@ -112,11 +112,12 @@ public class ChargesServiceImpl implements ChargesService {
             assert jmmain != null;
             Optional<Systab1> systab1Opt = systab1Repository.findFirstByCodeAgcyAndCodeKey(jmmain.getAgency(), "AGCY");
             Systab1 systab1 = systab1Opt.orElse(null);
-
+            sb.append(padRight(sysConfigService.getConfig().getVinePrisonerfileheader(), 10));
+            sb.append(padRight(sysConfigService.getConfig().getVineJailidnumber(), 12));
             sb.append(padRight(person.getStateId() != null ? person.getStateId() : "", 25));
             sb.append(padRight(String.valueOf(person.getNameId()), 25));
             sb.append(padRight(String.valueOf(jmmain.getBookId()), 25));
-
+            sb.append(padRight(String.valueOf(arrest.getCaseId()), 25));
             sb.append(padRight(person.getFirstname() != null ? person.getFirstname() : "", 20));
             sb.append(padRight(person.getMiddlename() != null ? person.getMiddlename() : "", 20));
             sb.append(padRight(person.getLastname() != null ? person.getLastname() : "", 20));
@@ -232,6 +233,8 @@ public class ChargesServiceImpl implements ChargesService {
 
             for (Charges charge : charges) {
                 if (!ChargeArmainId.equals(charge.getArmainid())) continue;
+                    sb.append(padRight(sysConfigService.getConfig().getVineChargesfileheader(), 10));
+                    sb.append(padRight(sysConfigService.getConfig().getVineJailidnumber(), 12));
                     sb.append(padRight(person.getStateId() != null ? person.getStateId() : "", 25));
                     sb.append(padRight(person.getNameId() != null ? String.valueOf(person.getNameId()) : "", 25));
                     sb.append(padRight(String.valueOf(charge.getBookId()), 25));

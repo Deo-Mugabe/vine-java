@@ -1,6 +1,9 @@
 package vine.vine.controller;
 
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -36,9 +39,9 @@ public class ChargesController {
 //    }
 
     @GetMapping("/generate")
-    public ResponseEntity<String> processBookings() {
+    public ResponseEntity<String> processBookings(LocalDateTime lastRunTime) {
         try {
-            String content = chargesService.processBookings();
+            String content = chargesService.processBookings(lastRunTime);
             return ResponseEntity.ok("File generated " + content.split("\n").length + " lines.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());

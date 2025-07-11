@@ -10,5 +10,5 @@ public interface ChargesService {
     Page<ChargesResponse> getAllCharges(Pageable pageable);
    // String getPrisonerCharges();
 //    String getPrisonerChargesByBookingId(Long bookId);
-    String processBookings();
+    String processBookings(LocalDateTime lastRunTime);
 }
