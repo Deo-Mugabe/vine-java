@@ -18,7 +18,7 @@ public class BookingProcessorScheduler {
     private final SchedulerProperties schedulerProperties;
 
     // Store last successful run time in memory
-    private LocalDateTime lastSuccessfulRunTime = LocalDateTime.now().minusDays(30); // default
+    private LocalDateTime lastSuccessfulRunTime = LocalDateTime.now().minusDays(1); // default
 
     @Scheduled(fixedDelayString = "#{@schedulerProperties.timerInMillis}")
     public void runProcessor() {

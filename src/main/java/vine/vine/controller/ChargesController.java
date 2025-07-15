@@ -1,18 +1,14 @@
 package vine.vine.controller;
 
-import lombok.RequiredArgsConstructor;
-
 import java.time.LocalDateTime;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import vine.vine.domain.dto.response.ChargesResponse;
+
+import lombok.RequiredArgsConstructor;
 import vine.vine.service.ChargesService;
 
 @RestController
@@ -22,11 +18,11 @@ public class ChargesController {
 
     private final ChargesService chargesService;
 
-    @GetMapping
-    private ResponseEntity<Page<ChargesResponse>> getAllCharges(Pageable pageable) {
-        Page<ChargesResponse> responses = chargesService.getAllCharges(pageable);
-        return new ResponseEntity<>(responses, HttpStatus.OK);
-    }
+    // @GetMapping
+    // private ResponseEntity<Page<ChargesResponse>> getAllCharges(Pageable pageable) {
+    //     Page<ChargesResponse> responses = chargesService.getAllCharges(pageable);
+    //     return new ResponseEntity<>(responses, HttpStatus.OK);
+    // }
 
 //    @GetMapping("/generate/{bookId}")
 //    public ResponseEntity<String> generateByBookingId(@PathVariable Long bookId) {

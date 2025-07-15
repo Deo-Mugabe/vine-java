@@ -55,6 +55,7 @@ public class SysConfigService {
         String vineFtpPassword = getRequiredConfig(configMap, "gcvineftppassword", "Vine FTP Password");
         String vinePrimaryFtpServerName = getRequiredConfig(configMap, "gcvineprimaryftpservername", "Vine Primary FTP Server Name");
         String vineNewMugShotDirectory = getRequiredConfig(configMap, "gcvinenewmugshotdirectory", "Vine New Mug Shot Directory");
+         String vineMugShotDirectory = getRequiredConfig(configMap, "gcvinemugshotdirectory", "Vine Mug Shot Directory");
 
         this.vineSystemConfig = new VineSystemConfig(
                 vineChargesfileheader,
@@ -66,7 +67,8 @@ public class SysConfigService {
                 vineFtpUserName,
                 vineFtpPassword,
                 vinePrimaryFtpServerName,
-                vineNewMugShotDirectory
+                vineNewMugShotDirectory,
+                vineMugShotDirectory
         );
 
         log.info("VineSystemConfig initialized successfully.");

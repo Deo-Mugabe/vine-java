@@ -1,5 +1,8 @@
 package vine.vine.service.Impl;
 
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,28 +12,30 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+import javax.imageio.ImageIO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import vine.vine.config.ServiceLog;
 import vine.vine.domain.Armain;
 import vine.vine.domain.Charges;
 import vine.vine.domain.Jfachist;
 import vine.vine.domain.Jmmain;
 import vine.vine.domain.Jrelease;
 import vine.vine.domain.Nmmain;
+import vine.vine.domain.SysImageEntity;
 import vine.vine.domain.Systab1;
 import vine.vine.domain.dto.response.BookingNamePair;
-import vine.vine.domain.dto.response.ChargesResponse;
 import vine.vine.repository.ArmainRepository;
 import vine.vine.repository.ChargesRepository;
 import vine.vine.repository.JfachistRepository;
 import vine.vine.repository.JmmainRepository;
 import vine.vine.repository.JreleaseRepository;
 import vine.vine.repository.NmmainRepository;
+import vine.vine.repository.SysImageRepository;
 import vine.vine.repository.Systab1Repository;
 import vine.vine.service.ChargesService;
 
@@ -49,13 +54,15 @@ public class ChargesServiceImpl implements ChargesService {
     private static final Logger log = LoggerFactory.getLogger(ChargesServiceImpl.class);
     private final JreleaseRepository jreleaseRepository;
     private final SysConfigService sysConfigService;
+    private final SysImageRepository sysImageRepository;
+    private final ServiceLog serviceLog;
 
 
-    @Override
-    public Page<ChargesResponse> getAllCharges(Pageable pageable) {
-        return chargesRepository.findAll(pageable)
-                .map(ChargesResponse::from);
-    }
+    // @Override
+    // public Page<ChargesResponse> getAllCharges(Pageable pageable) {
+    //     return chargesRepository.findAll(pageable)
+    //             .map(ChargesResponse::from);
+    // }
 
     private String padRight(String value, int width) {
         if (value == null) value = "";
@@ -73,8 +80,10 @@ public class ChargesServiceImpl implements ChargesService {
             Long nameId = pair.nameId();
             String prisonerQuery = prisonerQuery(nameId, bookingId);
             String prisonerCharges = getPrisonerCharges(nameId, bookingId);
+           // String mugShotString = getMugShotString(nameId, bookingId);
             sb.append(prisonerQuery);
             sb.append(prisonerCharges);
+            //sb.append(mugShotString);
         }
 
         writeToFile(sb.toString(), "vinelog.txt");
@@ -275,6 +284,71 @@ public class ChargesServiceImpl implements ChargesService {
 
     private String safeString(Object value) {
     return value != null ? value.toString() : "";
-}
+    }
+
+    public String getMugShotString(Long nameId, Long bookId) {
+        StringBuilder result = new StringBuilder();
+
+        String mugshotDir = sysConfigService.getConfig().getVineMugShotDirectory();
+        String newMugshotDir = sysConfigService.getConfig().getVineNewMugShotDirectory();
+
+        try {
+            Path mugshotPath = Paths.get(mugshotDir);
+            if (!Files.exists(mugshotPath)) {
+                log.warn("Mugshot directory does not exist: {}", mugshotDir);
+                return "";
+            }
+
+            // Just get the most recent image for the nameId
+            List<SysImageEntity> images = sysImageRepository
+                    .findBySystemKeyAndSystemIdOrderByAddTimeDesc("N", nameId);
+
+            if (images.isEmpty()) {
+                log.info("No mugshot records found in sys_img table for nameId={}", nameId);
+                return "";
+            }
+
+            // Ignore Ext1, assume the image file is named directly as "{nameId}.jpg"
+            String fileName = nameId + ".jpg";
+            Path sourcePath = Paths.get(mugshotDir, fileName);
+
+            if (!Files.exists(sourcePath)) {
+                serviceLog.logError("Mugshot file not found: " + sourcePath, "VineErrorLog.txt", true);
+                return "";
+            }
+
+            Path targetPath = Paths.get(newMugshotDir, bookId + ".jpg");
+            try (FileInputStream fis = new FileInputStream(sourcePath.toFile())) {
+                BufferedImage img = ImageIO.read(fis);
+                if (img == null) {
+                    serviceLog.logError("Image format could not be read from file: " + sourcePath, "VineErrorLog.txt", true);
+                    return "";
+                }
+                ImageIO.write(img, "jpg", targetPath.toFile());
+            } catch (IOException ioEx) {
+                serviceLog.logError("Mugshot copy error: " + ioEx.getMessage(), "VineErrorLog.txt", true);
+                return "";
+            }
+
+            if (Files.exists(targetPath)) {
+                String newFile = bookId + ".jpg";
+                result.append("OSSIIM    ");
+                result.append(padRight(String.valueOf(nameId), 25));
+                result.append(padRight(String.valueOf(bookId), 25));
+                result.append(padRight(nameId + ".jpg", 20));
+                result.append(padRight(newFile, 20));
+                result.append(padRight("FACE", 10));
+                result.append(System.lineSeparator());
+            } else {
+                serviceLog.logError("Mugshot file write failed for: " + targetPath, "VineErrorLog.txt", true);
+            }
+        } catch (Exception e) {
+            String error = "Unhandled error: " + e.getMessage();
+            log.error(error, e);
+            serviceLog.logError(error, "VineErrorLog.txt", true);
+        }
+
+        return result.toString();
+    }
 
 }

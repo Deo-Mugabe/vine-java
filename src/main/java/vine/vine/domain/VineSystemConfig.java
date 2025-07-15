@@ -16,4 +16,5 @@ public class VineSystemConfig {
     private final String vineFtpPassword;
     private final String vinePrimaryFtpServerName;
     private final String vineNewMugShotDirectory;
+    private final String vineMugShotDirectory;
 }
