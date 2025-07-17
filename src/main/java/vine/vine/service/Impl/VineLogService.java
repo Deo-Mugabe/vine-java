@@ -1,16 +1,14 @@
 package vine.vine.service.Impl;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import vine.vine.domain.Charges;
-import vine.vine.domain.Jmmain;
-import vine.vine.domain.Jrelease;
-import vine.vine.domain.Nmmain;
-import vine.vine.repository.*;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import vine.vine.repository.ChargesRepository;
+import vine.vine.repository.JfachistRepository;
+import vine.vine.repository.JmmainRepository;
+import vine.vine.repository.JreleaseRepository;
+import vine.vine.repository.NmmainRepository;
+import vine.vine.repository.Systab1Repository;
 
 @Service
 @RequiredArgsConstructor

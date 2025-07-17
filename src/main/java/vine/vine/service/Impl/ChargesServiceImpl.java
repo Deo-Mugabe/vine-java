@@ -1,18 +1,15 @@
 package vine.vine.service.Impl;
 
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-
-import javax.imageio.ImageIO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,19 +68,21 @@ public class ChargesServiceImpl implements ChargesService {
 
      @Override
     public String processBookings(LocalDateTime lastRunTime) {
+        clearNewMugshotDir();
         List<BookingNamePair> bookingPairs = bookingFetcher.fetchBookingAndNameIds(lastRunTime);
 
         StringBuilder sb = new StringBuilder();
+        
 
         for (BookingNamePair pair : bookingPairs) {
             Long bookingId = pair.bookId();
             Long nameId = pair.nameId();
             String prisonerQuery = prisonerQuery(nameId, bookingId);
             String prisonerCharges = getPrisonerCharges(nameId, bookingId);
-           // String mugShotString = getMugShotString(nameId, bookingId);
+            String mugShotString = getMugShotString(nameId, bookingId);
             sb.append(prisonerQuery);
             sb.append(prisonerCharges);
-            //sb.append(mugShotString);
+            sb.append(mugShotString);
         }
 
         writeToFile(sb.toString(), "vinelog.txt");
@@ -288,18 +287,10 @@ public class ChargesServiceImpl implements ChargesService {
 
     public String getMugShotString(Long nameId, Long bookId) {
         StringBuilder result = new StringBuilder();
-
         String mugshotDir = sysConfigService.getConfig().getVineMugShotDirectory();
         String newMugshotDir = sysConfigService.getConfig().getVineNewMugShotDirectory();
 
         try {
-            Path mugshotPath = Paths.get(mugshotDir);
-            if (!Files.exists(mugshotPath)) {
-                log.warn("Mugshot directory does not exist: {}", mugshotDir);
-                return "";
-            }
-
-            // Just get the most recent image for the nameId
             List<SysImageEntity> images = sysImageRepository
                     .findBySystemKeyAndSystemIdOrderByAddTimeDesc("N", nameId);
 
@@ -308,47 +299,68 @@ public class ChargesServiceImpl implements ChargesService {
                 return "";
             }
 
-            // Ignore Ext1, assume the image file is named directly as "{nameId}.jpg"
-            String fileName = nameId + ".jpg";
-            Path sourcePath = Paths.get(mugshotDir, fileName);
+            boolean atLeastOneFound = false;
 
-            if (!Files.exists(sourcePath)) {
-                serviceLog.logError("Mugshot file not found: " + sourcePath, "VineErrorLog.txt", true);
-                return "";
-            }
+            for (SysImageEntity img : images) {
+                String ext1 = img.getExt1() != null ? String.format("%02d", img.getExt1()) : "00";
+                String ext2 = img.getExt2() != null ? img.getExt2().toString() : "1";
+                String fileName = nameId + "." + ext1 + ext2;
+                Path sourcePath = Paths.get(mugshotDir, fileName);
 
-            Path targetPath = Paths.get(newMugshotDir, bookId + ".jpg");
-            try (FileInputStream fis = new FileInputStream(sourcePath.toFile())) {
-                BufferedImage img = ImageIO.read(fis);
-                if (img == null) {
-                    serviceLog.logError("Image format could not be read from file: " + sourcePath, "VineErrorLog.txt", true);
-                    return "";
+                if (!Files.exists(sourcePath)) {
+                    continue;
                 }
-                ImageIO.write(img, "jpg", targetPath.toFile());
-            } catch (IOException ioEx) {
-                serviceLog.logError("Mugshot copy error: " + ioEx.getMessage(), "VineErrorLog.txt", true);
-                return "";
-            }
 
-            if (Files.exists(targetPath)) {
-                String newFile = bookId + ".jpg";
+                // Always copy as <bookId>.jpg
+                Path targetPath = Paths.get(newMugshotDir, bookId + ".jpg");
+                Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                atLeastOneFound = true;
+
                 result.append("OSSIIM    ");
-                result.append(padRight(String.valueOf(nameId), 25));
-                result.append(padRight(String.valueOf(bookId), 25));
-                result.append(padRight(nameId + ".jpg", 20));
-                result.append(padRight(newFile, 20));
+                result.append(padRight(nameId.toString(), 25));
+                result.append(padRight(bookId.toString(), 25));
+                result.append(padRight(nameId + ".jpg", 20));  // represents original source
+                result.append(padRight(bookId + ".jpg", 20));  // final copied name
                 result.append(padRight("FACE", 10));
                 result.append(System.lineSeparator());
-            } else {
-                serviceLog.logError("Mugshot file write failed for: " + targetPath, "VineErrorLog.txt", true);
+
+                break; // Stop after first valid image is found and copied
             }
-        } catch (Exception e) {
-            String error = "Unhandled error: " + e.getMessage();
-            log.error(error, e);
-            serviceLog.logError(error, "VineErrorLog.txt", true);
+
+            if (!atLeastOneFound) {
+                serviceLog.logError("No matching mugshot files found on disk for nameId=" + nameId, "VineErroLog.txt", true);
+            }
+
+        } catch (Exception ex) {
+            log.error("Unhandled error in getMugShotString: {}", ex.getMessage(), ex);
+            serviceLog.logError("getMugShotString failure: " + ex.getMessage(), "VineErroLog.txt", true);
         }
 
         return result.toString();
     }
 
+    public void clearNewMugshotDir() {
+        String newMugshotDir = sysConfigService.getConfig().getVineNewMugShotDirectory();
+        try {
+            Path dir = Paths.get(newMugshotDir);
+            Files.createDirectories(dir); // Ensure dir exists
+            Files.list(dir)
+                    .filter(Files::isRegularFile)
+                    .forEach(path -> {
+                        try {
+                            Files.delete(path);
+                        } catch (IOException e) {
+                            log.warn("Failed to delete file from new mugshot dir: {}", path);
+                        }
+                    });
+            log.info("Cleared all files from mugshot output directory: {}", newMugshotDir);
+        } catch (IOException e) {
+            log.error("Error while clearing mugshot directory: {}", newMugshotDir, e);
+        }
+    }
+
+
+
+
 }
+

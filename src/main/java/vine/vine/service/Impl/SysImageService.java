@@ -25,7 +25,7 @@ public class SysImageService {
             SysImageEntity img = new SysImageEntity();
             img.setSystemKey(rs.getString("syskey"));
             img.setSystemId(rs.getLong("sysid"));
-            img.setExt1(rs.getString("ext1"));
+            img.setExt1(rs.getInt("ext1"));
             img.setAddTime(rs.getTimestamp("addtime").toLocalDateTime());
             return img;
         });

@@ -25,10 +25,10 @@ public class SysImageEntity {
     private String systemKey;
 
     @Column(name="ext1")
-    private String ext1;
+    private Integer ext1;
 
     @Column(name="ext2")
-    private String ext2;
+    private Integer ext2;
 
     @Column(name="addtime")
     private LocalDateTime addTime;
