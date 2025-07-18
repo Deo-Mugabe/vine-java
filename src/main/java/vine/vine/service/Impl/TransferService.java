@@ -21,7 +21,9 @@ public class TransferService {
 
     public boolean ftpDataAndMugshotFiles() {
 
-        String localDatFilePath = vineConfig.getConfig().getVineNewVineFilePath();
+        String datDirectory  = vineConfig.getConfig().getVineNewVineFilePath();
+         String datFileName = vineConfig.getConfig().getVineInterFile();
+          String localDatFilePath = Paths.get(datDirectory, datFileName).toString();
 
         if (localDatFilePath == null || localDatFilePath.isBlank()) {
             logger.error("Invalid FTP file path: {}", localDatFilePath);

@@ -1,12 +1,12 @@
 package vine.vine.domain;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
-
-import java.time.LocalDate;
 
 
 @Entity
@@ -22,6 +22,12 @@ public class Nmmain {
 
     @Column(name = "firstname")
     private String firstname;
+
+    @Column(name = "nametype")
+    private String nameType;
+
+    @Column(name = "alias_id")
+    private String aliasId;
 
     @Column(name = "middlename")
     private String middlename;

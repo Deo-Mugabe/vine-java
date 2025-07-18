@@ -1,10 +1,9 @@
 package vine.vine.domain.dto.response;
 
-import jakarta.persistence.Column;
+import java.time.LocalDate;
+
 import lombok.Data;
 import vine.vine.domain.Nmmain;
-
-import java.time.LocalDate;
 
 
 @Data
@@ -12,6 +11,8 @@ public class NmmainResponse {
 
     private Long nameId;
     private String stateId;
+    private String nameType;
+    private String aliasId;
     private String firstname;
     private String middlename;
     private String lastname;
@@ -41,6 +42,8 @@ public class NmmainResponse {
     public static NmmainResponse from(Nmmain nmmain){
         NmmainResponse response = new NmmainResponse();
         response.setStateId(nmmain.getStateId());
+        response.setNameType(nmmain.getNameType());
+        response.setAliasId(nmmain.getAliasId());
         response.setNameId(nmmain.getNameId());
         response.setFirstname(nmmain.getFirstname());
         response.setMiddlename(nmmain.getMiddlename());

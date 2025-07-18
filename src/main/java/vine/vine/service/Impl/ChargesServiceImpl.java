@@ -74,16 +74,16 @@ public class ChargesServiceImpl implements ChargesService {
         StringBuilder sb = new StringBuilder();
         
 
-//        for (BookingNamePair pair : bookingPairs) {
-//            Long bookingId = pair.bookId();
-//            Long nameId = pair.nameId();
-//            String prisonerQuery = prisonerQuery(nameId, bookingId);
-//            String prisonerCharges = getPrisonerCharges(nameId, bookingId);
-//            String mugShotString = getMugShotString(nameId, bookingId);
-//            sb.append(prisonerQuery);
-//            sb.append(prisonerCharges);
-//            sb.append(mugShotString);
-//        }
+       for (BookingNamePair pair : bookingPairs) {
+           Long bookingId = pair.bookId();
+           Long nameId = pair.nameId();
+           String prisonerQuery = prisonerQuery(nameId, bookingId);
+           String prisonerCharges = getPrisonerCharges(nameId, bookingId);
+           String mugShotString = getMugShotString(nameId, bookingId);
+           sb.append(prisonerQuery);
+           sb.append(prisonerCharges);
+           sb.append(mugShotString);
+       }
 
          // 🔥 Build full path using VineNewVineFilePath + VineInterfile
          String baseDir = sysConfigService.getConfig().getVineNewVineFilePath();
@@ -121,6 +121,9 @@ public class ChargesServiceImpl implements ChargesService {
 
             Optional<Jrelease> jreleaseOpt = jreleaseRepository.findById(bookId);
             Jrelease jrelease = jreleaseOpt.orElse(null);
+
+            Optional<Nmmain> aliasOpt = nmmainRepository.findFirstByAliasIdAndNameType(String.valueOf(nameId), "AKA");
+            Nmmain aliasName = aliasOpt.orElse(null);
 
             assert jmmain != null;
             Optional<Systab1> systab1Opt = systab1Repository.findFirstByCodeAgcyAndCodeKey(jmmain.getAgency(), "AGCY");
@@ -207,6 +210,22 @@ public class ChargesServiceImpl implements ChargesService {
             sb.append(padRight(person.getHphone() != null ? person.getHphone() : "", 10));
             sb.append(padRight(person.getWphone() != null ? person.getWphone() : "", 15));
             sb.append(padRight(person.getMphone() != null ? person.getMphone() : "", 10));
+            
+// Name Alias          
+            if (aliasName != null) {
+                String first = aliasName.getFirstname() != null ? aliasName.getFirstname() : "";
+                String last = aliasName.getLastname() != null ? aliasName.getLastname() : "";
+
+                if (!first.isEmpty() || !last.isEmpty()) {
+                    sb.append('N');
+                    sb.append(padRight(first, 20));
+                    sb.append(padRight(last, 20));
+                    } else {
+                        sb.append(" ".repeat(41));
+                    }
+                } else {
+                    sb.append(" ".repeat(41));
+            }
 
 // Facility info from jfachist
             if (jfachist != null) {
