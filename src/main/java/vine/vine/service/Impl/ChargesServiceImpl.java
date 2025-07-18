@@ -74,18 +74,23 @@ public class ChargesServiceImpl implements ChargesService {
         StringBuilder sb = new StringBuilder();
         
 
-        for (BookingNamePair pair : bookingPairs) {
-            Long bookingId = pair.bookId();
-            Long nameId = pair.nameId();
-            String prisonerQuery = prisonerQuery(nameId, bookingId);
-            String prisonerCharges = getPrisonerCharges(nameId, bookingId);
-            String mugShotString = getMugShotString(nameId, bookingId);
-            sb.append(prisonerQuery);
-            sb.append(prisonerCharges);
-            sb.append(mugShotString);
-        }
+//        for (BookingNamePair pair : bookingPairs) {
+//            Long bookingId = pair.bookId();
+//            Long nameId = pair.nameId();
+//            String prisonerQuery = prisonerQuery(nameId, bookingId);
+//            String prisonerCharges = getPrisonerCharges(nameId, bookingId);
+//            String mugShotString = getMugShotString(nameId, bookingId);
+//            sb.append(prisonerQuery);
+//            sb.append(prisonerCharges);
+//            sb.append(mugShotString);
+//        }
 
-        writeToFile(sb.toString(), "vinelog.txt");
+         // 🔥 Build full path using VineNewVineFilePath + VineInterfile
+         String baseDir = sysConfigService.getConfig().getVineNewVineFilePath();
+         String fileName = sysConfigService.getConfig().getVineInterFile();
+         String fullPath = Paths.get(baseDir, fileName).toString();
+
+         writeToFile(sb.toString(), fullPath);
         return sb.toString();
     }
 
