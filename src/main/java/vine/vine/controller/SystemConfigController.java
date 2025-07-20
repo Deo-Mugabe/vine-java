@@ -23,7 +23,7 @@ import vine.vine.service.Impl.SysConfigService;
 
 
 @RestController
-@RequestMapping("/api/v1/system-config")
+@RequestMapping("/api/v1/vine-app")
 @RequiredArgsConstructor
 @Slf4j
 public class SystemConfigController {
